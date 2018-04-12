@@ -32,13 +32,13 @@ def extract_tvseries(dom):
     - Runtime (only a number!)
     """
 
+    #grab the url and download it
     uClient = urlopen(TARGET_URL)
     tvseries_html = uClient.read()
     uClient.close()
-    soup = BeautifulSoup(tvseries_html, "html.parser")
 
-    tvseries = soup.find_all("div", {"class":"lister-item-content"})
-
+    #find all tvseries with all information in it
+    tvseries = dom.find_all("div", {"class":"lister-item-content"})
     tvserie = tvseries[0]
 
     #reserve storage for all information
