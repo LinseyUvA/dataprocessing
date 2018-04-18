@@ -3,8 +3,11 @@
 <html>
     <head>
         <title>Homework week 2</title>
+        <style type="text/css">
+            canvas { border: 1px solid black; }
+        </style>
     </head>
-    <body>
+    <body onload="draw();">
         <textarea id="rawdata">
           # date,maxtemp
           20160101,   75
@@ -374,6 +377,7 @@
           20161230,   15
           20161231,   33
         </textarea>
+        <canvas id="myCanvas" width="450" height="350"></canvas>
         <script>
           // data ophalen en in lijnen opslitsen
           var data = document.getElementById("rawdata").value.split("\n");
@@ -387,12 +391,12 @@
               dataDatum.push(line[0].trim(" "))
               dataTemp.push(line[1].trim(" "))
           }
-          console.log(dataTemp)
+
 
           // datum en temperatuur omzetten in JavaScript datums en nummers
           javaDatum = []
           javaTemp = []
-          for (var i = 0; i < data.length; i++)
+          for (var i = 1; i < dataDatum.length; i++)
           {
             var jaar = dataDatum[i].slice(0, 4)
             var maand = dataDatum[i].slice(4, 6)
@@ -402,6 +406,13 @@
 
             var javaT = Number(dataTemp[i])
             javaTemp.push(javaT)
+          }
+
+          // datums omzetten naar milliseconde
+          var milliseconde = []
+          for (var i = 0; i < javaDatum.length; i++)
+          {
+            milliseconde.push(javaDatum[i].getTime())
           }
 
 
@@ -421,6 +432,15 @@
             {
               return alpha * x + beta;
             }
+        }
+
+        function draw()
+        {
+          var canvas = document.getElementById("myCanvas");
+          if (canvas.getContext) {
+            var ctx = canvas.getContext("2d");
+
+          }
         }
         </script>
 
