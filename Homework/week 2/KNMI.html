@@ -377,7 +377,9 @@
           20161230,   15
           20161231,   33
         </textarea>
-        <canvas id="myCanvas" width="450" height="350"></canvas>
+        <p>
+            <canvas id="myCanvas" width="466" height="437"></canvas>
+        </p>
         <script>
           // data ophalen en in lijnen opslitsen
           var data = document.getElementById("rawdata").value.split("\n");
@@ -409,11 +411,11 @@
           }
 
           // schermgrootte defineren
-          var grens = 30
+          var grens = 50
           var hoogte = document.getElementById("myCanvas")["height"]
           var breedte = document.getElementById("myCanvas")["width"]
-          var bereikDatum = [0, hoogte - (2 * grens)]
-          var bereikTemp = [0, breedte - (2 * grens)]
+          var bereikDatum = [0, breedte - (2 * grens)]
+          var bereikTemp = [0, hoogte - (2 * grens)]
 
           // datums omzetten naar milliseconde
           var milliseconde = []
@@ -422,33 +424,112 @@
             milliseconde.push(javaDatum[i].getTime())
           }
 
+          // bereken nieuwe waarden voor datums
+          var domeinDatum = [Math.min.apply(null, milliseconde), Math.max.apply(null, milliseconde)]
+          var veranderDatum = createTransform(domeinDatum, bereikDatum)
+          var puntenDatum = []
+          for (var i = 0; i < milliseconde.length; i++)
+          {
+            puntenDatum.push(veranderDatum(milliseconde[i]))
+          }
 
+          // bereken nieuwe waarden voor temperatuur
+          var domeinTemp = [Math.min.apply(null, javaTemp), Math.max.apply(null, javaTemp)]
+          var veranderTemp = createTransform(domeinTemp, bereikTemp)
+          var puntenTemp = []
+          for (var i = 0; i < javaTemp.length; i++)
+          {
+            puntenTemp.push(veranderTemp(javaTemp[i]))
+          }
+
+          // bererekenen van alfa en beta
           function createTransform(domain, range)
           {
             var domain_min = domain[0]
             var domain_max = domain[1]
             var range_min = range[0]
             var range_max = range[1]
-
             // formules voor het berekenen van de alpha en de beta
            	var alpha = (range_max - range_min) / (domain_max - domain_min)
             var beta = range_max - alpha * domain_max
-
             // returns de functie voor de lineaire transformatie (y= a * x + b)
             return function(x)
             {
               return alpha * x + beta;
             }
-        }
-
-        function draw()
-        {
-          var canvas = document.getElementById("myCanvas");
-          if (canvas.getContext) {
-            var ctx = canvas.getContext("2d");
-
           }
-        }
+
+          function draw()
+          {
+            var canvas = document.getElementById("myCanvas")
+            if (canvas.getContext)
+            {
+              var ctx = canvas.getContext("2d")
+
+              var bereikTemp = Math.abs(domeinTemp[0]) + domeinTemp[1]
+              var aantalDagen = milliseconde.length
+
+              // teken x-as
+              ctx.beginPath()
+              ctx.moveTo(grens, grens + bereikTemp)
+              ctx.lineTo(grens + aantalDagen, grens + bereikTemp)
+              ctx.stroke()
+              ctx.closePath()
+
+              // teken y-as
+              ctx.beginPath()
+              ctx.moveTo(grens, grens - 13)
+              ctx.lineTo(grens, grens + bereikTemp)
+              ctx.stroke()
+              ctx.closePath()
+
+
+              // stapgrootte aan x-as toevoegen
+              var count = 35
+              for (var i = 0, maanden = 12; i < maanden; i++)
+              {
+                ctx.moveTo(grens + count, grens + bereikTemp + 3)
+                ctx.lineTo(grens + count, grens + bereikTemp)
+                ctx.stroke()
+                count += 30
+              }
+
+              // stapgrootte aan y-as toevoegen
+              var count = 0
+              for (var i = 0, n = 8; i < n; i++)
+              {
+                ctx.moveTo(grens - 3, grens + count - 13)
+                ctx.lineTo(grens, grens + count - 13)
+                ctx.stroke()
+                count += 50
+              }
+
+              // waarden aan x-as toevoegen
+              var count = 0
+              for (var i = 0, n = 8; i < n; i++)
+              {
+                ctx.font = '12px serif';
+                ctx.fillText(count, grens - 25, 400 - count - 13);
+                count += 50
+              }
+
+
+
+              // x-as benoemen
+
+
+              // punten in de grafiek toevoegen
+              ctx.beginPath()
+              ctx.moveTo(grens + puntenDatum[0], puntenTemp[0])
+              for (var i = 0; i < milliseconde.length; i++)
+              {
+                ctx.lineTo(grens + puntenDatum[i], hoogte - puntenTemp[i] - grens)
+              }
+              ctx.stroke()
+              ctx.closePath()
+
+            }
+          }
         </script>
 
     </body>
