@@ -464,7 +464,6 @@
 
               var bereikTemp = Math.abs(domeinTemp[0]) + domeinTemp[1]
               var aantalDagen = milliseconde.length
-              console.log(aantalDagen)
 
               // teken x-as
               ctx.beginPath()
@@ -516,7 +515,7 @@
                 ctx.lineTo(grens, grens + bereikTemp - count)
                 ctx.stroke()
                 ctx.font = "12px serif"
-                ctx.fillText(count - 8, grens - 25, bereikTemp + grens - count);
+                ctx.fillText(count - Math.abs(domeinTemp[0]), grens - 25, bereikTemp + grens - count);
                 count += 50
               }
 
