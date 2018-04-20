@@ -14,189 +14,185 @@
         <script>
 
           var xhr = new XMLHttpRequest()
-          xhr.onreadystatecchange = function()
+          xhr.addEventListener("load", grafiek)
+          xhr.open("GET", "https://github.com/LinseyUvA/dataprocessing/blob/master/Homework/week%202/KNMI.csv", true)
+          xhr.send()
+
+          function grafiek()
           {
-            if (xhr.readyState == 4 && this.status == 200)
+            // door de lijnen itereren en in datum en temperatuur opslitsen
+            dataDatum = []
+            dataTemp = []
+            for (var i = 0; i < data.length-1; i++)
             {
-              grafiek(xhr.responseText)
+                line = data[i].split(",")
+                dataDatum.push(line[0].trim(" "))
+                dataTemp.push(line[1].trim(" "))
+            }
+
+            // datum en temperatuur omzetten in JavaScript datums en nummers
+            javaDatum = []
+            javaTemp = []
+            for (var i = 1; i < dataDatum.length; i++)
+            {
+              var jaar = dataDatum[i].slice(0, 4)
+              var maand = dataDatum[i].slice(4, 6)
+              var dag = dataDatum[i].slice(6, 8)
+              var javaD = new Date(jaar, maand - 1, dag, 0, 0, 0, 0)
+              javaDatum.push(javaD)
+
+              var javaT = Number(dataTemp[i])
+              javaTemp.push(javaT)
+            }
+
+            // schermgrootte defineren
+            var grens = 75
+            var hoogte = document.getElementById("myCanvas")["height"]
+            var breedte = document.getElementById("myCanvas")["width"]
+            var bereikDatum = [0, breedte - (2 * grens)]
+            var bereikTemp = [0, hoogte - (2 * grens)]
+
+            // datums omzetten naar milliseconde
+            var milliseconde = []
+            for (var i = 0; i < javaDatum.length; i++)
+            {
+              milliseconde.push(javaDatum[i].getTime())
+            }
+
+            // bereken nieuwe waarden voor datums
+            var domeinDatum = [Math.min.apply(null, milliseconde), Math.max.apply(null, milliseconde)]
+            var veranderDatum = createTransform(domeinDatum, bereikDatum)
+            var puntenDatum = []
+            for (var i = 0; i < milliseconde.length; i++)
+            {
+              puntenDatum.push(veranderDatum(milliseconde[i]))
+            }
+
+            // bereken nieuwe waarden voor temperatuur
+            var domeinTemp = [Math.min.apply(null, javaTemp), Math.max.apply(null, javaTemp)]
+            var veranderTemp = createTransform(domeinTemp, bereikTemp)
+            var puntenTemp = []
+            for (var i = 0; i < javaTemp.length; i++)
+            {
+              puntenTemp.push(veranderTemp(javaTemp[i]))
+            }
+
+            // bererekenen van alfa en beta
+            function createTransform(domain, range)
+            {
+              var domain_min = domain[0]
+              var domain_max = domain[1]
+              var range_min = range[0]
+              var range_max = range[1]
+              // formules voor het berekenen van de alpha en de beta
+             	var alpha = (range_max - range_min) / (domain_max - domain_min)
+              var beta = range_max - alpha * domain_max
+              // returns de functie voor de lineaire transformatie (y= a * x + b)
+              return function(x)
+              {
+                return alpha * x + beta;
+              }
+            }
+
+            function draw()
+            {
+              var canvas = document.getElementById("myCanvas")
+              if (canvas.getContext)
+              {
+                var ctx = canvas.getContext("2d")
+
+                var bereikTemp = Math.abs(domeinTemp[0]) + domeinTemp[1]
+                var aantalDagen = milliseconde.length
+
+                // teken x-as
+                ctx.beginPath()
+                ctx.moveTo(grens, grens + bereikTemp)
+                ctx.lineTo(grens + aantalDagen, grens + bereikTemp)
+                ctx.stroke()
+                ctx.closePath()
+
+                // teken y-as
+                ctx.beginPath()
+                ctx.moveTo(grens, grens - 13)
+                ctx.lineTo(grens, grens + bereikTemp)
+                ctx.stroke()
+                ctx.closePath()
+
+
+                // stapgrootte aan x-as toevoegen
+                var count = 30
+                for (var i = 0, maanden = 12; i < maanden; i++)
+                {
+                  ctx.moveTo(grens + count, grens + bereikTemp + 3)
+                  ctx.lineTo(grens + count, grens + bereikTemp)
+                  ctx.stroke()
+                  count += 30.5
+                }
+
+                // waarden aan x-as toevoegen
+                ctx.beginPath()
+                ctx.font = "12px serif"
+                ctx.fillText("jan", grens + 10, grens + bereikTemp + 15)
+                ctx.fillText("feb", grens + 40, grens + bereikTemp + 15)
+                ctx.fillText("mrt", grens + 70, grens + bereikTemp + 15)
+                ctx.fillText("apr", grens + 100, grens + bereikTemp + 15)
+                ctx.fillText("mei", grens + 130, grens + bereikTemp + 15)
+                ctx.fillText("jun", grens + 160, grens + bereikTemp + 15)
+                ctx.fillText("jul", grens + 190, grens + bereikTemp + 15)
+                ctx.fillText("aug", grens + 220, grens + bereikTemp + 15)
+                ctx.fillText("sep", grens + 250, grens + bereikTemp + 15)
+                ctx.fillText("okt", grens + 280, grens + bereikTemp + 15)
+                ctx.fillText("nov", grens + 310, grens + bereikTemp + 15)
+                ctx.fillText("dec", grens + 340, grens + bereikTemp + 15)
+                ctx.closePath
+
+                // waarden en stapgrootte aan y-as toevoegen
+                var count = 0
+                for (var i = 0, n = 8; i < n; i++)
+                {
+                  ctx.moveTo(grens - 3, grens + bereikTemp - count)
+                  ctx.lineTo(grens, grens + bereikTemp - count)
+                  ctx.stroke()
+                  ctx.font = "12px serif"
+                  ctx.fillText(count, grens - 25, bereikTemp + grens - count);
+                  count += 50
+                }
+
+                // punten in de grafiek toevoegen
+                ctx.beginPath()
+                ctx.lineWidth = 0.8
+                ctx.strokeStyle = "blue";
+                ctx.moveTo(grens + puntenDatum[0], puntenTemp[0])
+                for (var i = 0; i < milliseconde.length; i++)
+                {
+                  ctx.lineTo(grens + puntenDatum[i], hoogte - puntenTemp[i] - grens)
+                }
+                ctx.stroke()
+                ctx.closePath()
+                console.log(puntenDatum)
+
+                // titel toevoegen
+                ctx.beginPath()
+                ctx.font = "25px serif"
+                ctx.fillText("Maximum temperatuur 2014 De Bilt", grens + 10, 20)
+                ctx.font = "14px serif"
+                ctx.fillText("KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT", grens, 40)
+                ctx.closePath()
+
+                // titel aan assen geven
+                ctx.beginPath()
+                ctx.font = "16px serif"
+                ctx.fillText("Maanden", breedte - grens - 20, hoogte - 30)
+                ctx.rotate(-Math.PI/2)
+                ctx.fillText("Graden", - grens - 20, grens - 40)
+                ctx.closePath()
+
+
+              }
             }
           }
-          xhr.open("GET", "KNMI.csv", true)
-          xhr.send(null)
-
-          function grafiek(data)
-          {
-              // door de lijnen itereren en in datum en temperatuur opslitsen
-              dataDatum = []
-              dataTemp = []
-              for (var i = 0; i < data.length-1; i++)
-              {
-                  line = data[i].split(",")
-                  dataDatum.push(line[0].trim(" "))
-                  dataTemp.push(line[1].trim(" "))
-              }
-
-              // datum en temperatuur omzetten in JavaScript datums en nummers
-              javaDatum = []
-              javaTemp = []
-              for (var i = 1; i < dataDatum.length; i++)
-              {
-                var jaar = dataDatum[i].slice(0, 4)
-                var maand = dataDatum[i].slice(4, 6)
-                var dag = dataDatum[i].slice(6, 8)
-                var javaD = new Date(jaar, maand - 1, dag, 0, 0, 0, 0)
-                javaDatum.push(javaD)
-
-                var javaT = Number(dataTemp[i])
-                javaTemp.push(javaT)
-              }
-
-              // schermgrootte defineren
-              var grens = 75
-              var hoogte = document.getElementById("myCanvas")["height"]
-              var breedte = document.getElementById("myCanvas")["width"]
-              var bereikDatum = [0, breedte - (2 * grens)]
-              var bereikTemp = [0, hoogte - (2 * grens)]
-
-              // datums omzetten naar milliseconde
-              var milliseconde = []
-              for (var i = 0; i < javaDatum.length; i++)
-              {
-                milliseconde.push(javaDatum[i].getTime())
-              }
-
-              // bereken nieuwe waarden voor datums
-              var domeinDatum = [Math.min.apply(null, milliseconde), Math.max.apply(null, milliseconde)]
-              var veranderDatum = createTransform(domeinDatum, bereikDatum)
-              var puntenDatum = []
-              for (var i = 0; i < milliseconde.length; i++)
-              {
-                puntenDatum.push(veranderDatum(milliseconde[i]))
-              }
-
-              // bereken nieuwe waarden voor temperatuur
-              var domeinTemp = [Math.min.apply(null, javaTemp), Math.max.apply(null, javaTemp)]
-              var veranderTemp = createTransform(domeinTemp, bereikTemp)
-              var puntenTemp = []
-              for (var i = 0; i < javaTemp.length; i++)
-              {
-                puntenTemp.push(veranderTemp(javaTemp[i]))
-              }
-
-              // bererekenen van alfa en beta
-              function createTransform(domain, range)
-              {
-                var domain_min = domain[0]
-                var domain_max = domain[1]
-                var range_min = range[0]
-                var range_max = range[1]
-                // formules voor het berekenen van de alpha en de beta
-               	var alpha = (range_max - range_min) / (domain_max - domain_min)
-                var beta = range_max - alpha * domain_max
-                // returns de functie voor de lineaire transformatie (y= a * x + b)
-                return function(x)
-                {
-                  return alpha * x + beta;
-                }
-              }
-
-              function draw()
-              {
-                var canvas = document.getElementById("myCanvas")
-                if (canvas.getContext)
-                {
-                  var ctx = canvas.getContext("2d")
-
-                  var bereikTemp = Math.abs(domeinTemp[0]) + domeinTemp[1]
-                  var aantalDagen = milliseconde.length
-
-                  // teken x-as
-                  ctx.beginPath()
-                  ctx.moveTo(grens, grens + bereikTemp)
-                  ctx.lineTo(grens + aantalDagen, grens + bereikTemp)
-                  ctx.stroke()
-                  ctx.closePath()
-
-                  // teken y-as
-                  ctx.beginPath()
-                  ctx.moveTo(grens, grens - 13)
-                  ctx.lineTo(grens, grens + bereikTemp)
-                  ctx.stroke()
-                  ctx.closePath()
 
 
-                  // stapgrootte aan x-as toevoegen
-                  var count = 30
-                  for (var i = 0, maanden = 12; i < maanden; i++)
-                  {
-                    ctx.moveTo(grens + count, grens + bereikTemp + 3)
-                    ctx.lineTo(grens + count, grens + bereikTemp)
-                    ctx.stroke()
-                    count += 30.5
-                  }
-
-                  // waarden aan x-as toevoegen
-                  ctx.beginPath()
-                  ctx.font = "12px serif"
-                  ctx.fillText("jan", grens + 10, grens + bereikTemp + 15)
-                  ctx.fillText("feb", grens + 40, grens + bereikTemp + 15)
-                  ctx.fillText("mrt", grens + 70, grens + bereikTemp + 15)
-                  ctx.fillText("apr", grens + 100, grens + bereikTemp + 15)
-                  ctx.fillText("mei", grens + 130, grens + bereikTemp + 15)
-                  ctx.fillText("jun", grens + 160, grens + bereikTemp + 15)
-                  ctx.fillText("jul", grens + 190, grens + bereikTemp + 15)
-                  ctx.fillText("aug", grens + 220, grens + bereikTemp + 15)
-                  ctx.fillText("sep", grens + 250, grens + bereikTemp + 15)
-                  ctx.fillText("okt", grens + 280, grens + bereikTemp + 15)
-                  ctx.fillText("nov", grens + 310, grens + bereikTemp + 15)
-                  ctx.fillText("dec", grens + 340, grens + bereikTemp + 15)
-                  ctx.closePath
-
-                  // waarden en stapgrootte aan y-as toevoegen
-                  var count = 0
-                  for (var i = 0, n = 8; i < n; i++)
-                  {
-                    ctx.moveTo(grens - 3, grens + bereikTemp - count)
-                    ctx.lineTo(grens, grens + bereikTemp - count)
-                    ctx.stroke()
-                    ctx.font = "12px serif"
-                    ctx.fillText(count, grens - 25, bereikTemp + grens - count);
-                    count += 50
-                  }
-
-                  // punten in de grafiek toevoegen
-                  ctx.beginPath()
-                  ctx.lineWidth = 0.8
-                  ctx.strokeStyle = "blue";
-                  ctx.moveTo(grens + puntenDatum[0], puntenTemp[0])
-                  for (var i = 0; i < milliseconde.length; i++)
-                  {
-                    ctx.lineTo(grens + puntenDatum[i], hoogte - puntenTemp[i] - grens)
-                  }
-                  ctx.stroke()
-                  ctx.closePath()
-                  console.log(puntenDatum)
-
-                  // titel toevoegen
-                  ctx.beginPath()
-                  ctx.font = "25px serif"
-                  ctx.fillText("Maximum temperatuur 2014 De Bilt", grens + 10, 20)
-                  ctx.font = "14px serif"
-                  ctx.fillText("KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT", grens, 40)
-                  ctx.closePath()
-
-                  // titel aan assen geven
-                  ctx.beginPath()
-                  ctx.font = "16px serif"
-                  ctx.fillText("Maanden", breedte - grens - 20, hoogte - 30)
-                  ctx.rotate(-Math.PI/2)
-                  ctx.fillText("Graden", - grens - 20, grens - 40)
-                  ctx.closePath()
-
-
-                }
-              }
-            }
         </script>
         <a href="http://projects.knmi.nl/klimatologie/daggegevens/selectie.cgi">Bron</a>
         <p> Linsey Schaap (11036109) </p>
