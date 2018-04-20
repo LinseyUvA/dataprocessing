@@ -389,11 +389,10 @@
           dataTemp = []
           for (var i = 0; i < data.length-1; i++)
           {
-              line = data[i].split(",")
-              dataDatum.push(line[0].trim(" "))
-              dataTemp.push(line[1].trim(" "))
+              var lijn = data[i].split(",")
+              dataDatum.push(lijn[0].trim(" "))
+              dataTemp.push(lijn[1].trim(" "))
           }
-
 
           // datum en temperatuur omzetten in JavaScript datums en nummers
           javaDatum = []
@@ -403,11 +402,8 @@
             var jaar = dataDatum[i].slice(0, 4)
             var maand = dataDatum[i].slice(4, 6)
             var dag = dataDatum[i].slice(6, 8)
-            var javaD = new Date(jaar, maand - 1, dag, 0, 0, 0, 0)
-            javaDatum.push(javaD)
-
-            var javaT = Number(dataTemp[i])
-            javaTemp.push(javaT)
+            javaDatum.push(new Date(jaar, maand - 1, dag, 0, 0, 0, 0))
+            javaTemp.push(Number(dataTemp[i]))
           }
 
           // schermgrootte defineren
@@ -425,7 +421,7 @@
           }
 
           // bereken nieuwe waarden voor datums
-          var domeinDatum = [Math.min.apply(null, milliseconde), Math.max.apply(null, milliseconde)]
+          var domeinDatum = [Math.min(...milliseconde), Math.max(...milliseconde)]
           var veranderDatum = createTransform(domeinDatum, bereikDatum)
           var puntenDatum = []
           for (var i = 0; i < milliseconde.length; i++)
@@ -434,7 +430,7 @@
           }
 
           // bereken nieuwe waarden voor temperatuur
-          var domeinTemp = [Math.min.apply(null, javaTemp), Math.max.apply(null, javaTemp)]
+          var domeinTemp = [Math.min(...javaTemp), Math.max(...javaTemp)]
           var veranderTemp = createTransform(domeinTemp, bereikTemp)
           var puntenTemp = []
           for (var i = 0; i < javaTemp.length; i++)
@@ -468,6 +464,7 @@
 
               var bereikTemp = Math.abs(domeinTemp[0]) + domeinTemp[1]
               var aantalDagen = milliseconde.length
+              console.log(aantalDagen)
 
               // teken x-as
               ctx.beginPath()
@@ -512,14 +509,14 @@
               ctx.closePath
 
               // waarden en stapgrootte aan y-as toevoegen
-              var count = 0
-              for (var i = 0, n = 8; i < n; i++)
+              var count = Math.abs(domeinTemp[0])
+              for (var i = 0, n = 7; i < n; i++)
               {
                 ctx.moveTo(grens - 3, grens + bereikTemp - count)
                 ctx.lineTo(grens, grens + bereikTemp - count)
                 ctx.stroke()
                 ctx.font = "12px serif"
-                ctx.fillText(count, grens - 25, bereikTemp + grens - count);
+                ctx.fillText(count - 8, grens - 25, bereikTemp + grens - count);
                 count += 50
               }
 
@@ -534,7 +531,6 @@
               }
               ctx.stroke()
               ctx.closePath()
-              console.log(puntenDatum)
 
               // titel toevoegen
               ctx.beginPath()
@@ -551,8 +547,6 @@
               ctx.rotate(-Math.PI/2)
               ctx.fillText("Graden", - grens - 20, grens - 40)
               ctx.closePath()
-
-
             }
           }
         </script>
