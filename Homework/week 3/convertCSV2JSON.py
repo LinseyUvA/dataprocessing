@@ -10,11 +10,8 @@ import json
 csvbestand = open("data.csv", "r")
 jsonbestand = open("data.json", "w")
 
-data = {}
-for lijn in csvbestand:
-    data[lijn.split(";")[0]] = (lijn.split(";")[1])
-
 namen = ("Provincies", "Gasten *1000")
 bestand = csv.DictReader(data, namen)
 
-jsonString = json.dump(bestand, jsonbestand, indent = 4)
+out = json.dumps([row for row in bestand])
+jsonbestand.write(out)
