@@ -14,6 +14,7 @@ with open("data.csv", "r") as csvbestand:
 
 with open("data.json", "w") as json
     jsonbestand = json.dump(data, json, indent = 4)
+    json.write(jsonbestand)
 
 # namen = ("Provincies", "Gasten *1000")
 # bestand = csv.DictReader(csvbestand, namen)
