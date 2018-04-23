@@ -12,5 +12,5 @@ with open("data.csv", "r") as f:
     bestand = csv.DictReader(f, namen)
     regels = list(reader)
 
-with open("jsonbestand", "w") as f:
-    json.dump(regels, f, indent = 4)
+with open("data.json", "w") as f:
+    json.dump(regels, f)
