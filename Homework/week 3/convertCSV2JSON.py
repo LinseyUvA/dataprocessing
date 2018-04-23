@@ -7,10 +7,12 @@ This script convert a csv file into a JSON format.
 import csv
 import json
 
-with open("data.csv", "r") as f:
-    namen = ("Provincies", "Gasten *1000")
-    bestand = csv.DictReader(f, namen)
-    regels = list(reader)
+csvbestand = open("data.csv", "r")
+jsonbestand = open("data.json", "w")
 
-with open("data.json", "w") as f:
-    json.dump(regels, f)
+namen = ("Provincies", "Gasten *1000")
+bestand = csv.DictReader(csvbestand, namen)
+
+for regel in bestand:
+    json.dump(regel, jsonbestand)
+    jsonbestand.write("\n")
