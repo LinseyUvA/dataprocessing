@@ -10,11 +10,13 @@ import json
 csvbestand = open("data.csv", "r")
 jsonbestand = open("data.json", "w")
 
-bestand = csv.DictReader(csvbestand)
-#
-# for lijn in bestand:
-#     regel = csvbestand[lijn].split(";")
+data = {}
+for lijn in csvbestand:
+    data[lijn.split(";")[0]] = (lijn.split(";")[1])
+
+namen = ("Provincies", "Gasten *1000")
+bestand = csv.DictReader(data, namen)
 
 for regel in bestand:
-    print(json.dump(row, jsonbestand)
-    jsonbestand.write(out)
+    json.dump(regel, jsonbestand)
+    jsonbestand.write("\n")
