@@ -1,12 +1,48 @@
-{"Provincie": "Groningen ;30", "Gasten *1000": null}
-{"Provincie": "Friesland;32", "Gasten *1000": null}
-{"Provincie": "Drenthe;32", "Gasten *1000": null}
-{"Provincie": "Overijssel;60", "Gasten *1000": null}
-{"Provincie": "Flevoland;9", "Gasten *1000": null}
-{"Provincie": "Gelderland;117", "Gasten *1000": null}
-{"Provincie": "Utrecht;61", "Gasten *1000": null}
-{"Provincie": "Noord-Holland;276", "Gasten *1000": null}
-{"Provincie": "Zuid-Holland;207", "Gasten *1000": null}
-{"Provincie": "Zeeland;28", "Gasten *1000": null}
-{"Provincie": "Noord-Brabant;100", "Gasten *1000": null}
-{"Provincie": "Limburg;87", "Gasten *1000": null}
+{
+    "Provincie": "Groningen;30",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Friesland;32",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Drenthe;32",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Overijssel;60",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Flevoland;9",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Gelderland;117",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Utrecht;61",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Noord-Holland;276",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Zuid-Holland;207",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Zeeland;28",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Noord-Brabant;100",
+    "Gasten *1000": null
+}
+{
+    "Provincie": "Limburg;87",
+    "Gasten *1000": null
+}
