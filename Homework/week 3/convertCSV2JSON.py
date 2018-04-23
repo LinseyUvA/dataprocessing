@@ -18,5 +18,5 @@ namen = ("Provincies", "Gasten *1000")
 bestand = csv.DictReader(csvbestand, namen)
 
 for regel in bestand:
-    json.dump(regel, jsonbestand, indent = 4)
+    json.dump(regel, jsonbestand)
     jsonbestand.write("\n")
