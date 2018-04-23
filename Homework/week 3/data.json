@@ -1,6 +1,1 @@
-{"data":
-[{
-    "Provincies": "Groningen",
-    "Gasten *1000": "30"
-},
-hoi,]}
+{"data": [{"Provincies": "Groningen", "Gasten *1000": "30"}, {"Provincies": "Friesland", "Gasten *1000": "32"}, {"Provincies": "Drenthe", "Gasten *1000": "32"}, {"Provincies": "Overijssel", "Gasten *1000": "60"}, {"Provincies": "Flevoland", "Gasten *1000": "9"}, {"Provincies": "Gelderland", "Gasten *1000": "117"}, {"Provincies": "Utrecht", "Gasten *1000": "61"}, {"Provincies": "Noord-Holland", "Gasten *1000": "276"}, {"Provincies": "Zuid-Holland", "Gasten *1000": "207"}, {"Provincies": "Zeeland", "Gasten *1000": "28"}, {"Provincies": "Noord-Brabant", "Gasten *1000": "100"}, {"Provincies": "Limburg", "Gasten *1000": "87"}]}
