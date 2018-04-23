@@ -17,4 +17,4 @@ jsonbestand.write('{"data":' "\n" '[')
 for regel in bestand:
     json.dump(regel, jsonbestand, indent = 4)
     jsonbestand.write(",\n")
-jsonbestand.write('\b]}')
+jsonbestand.write(']}')
