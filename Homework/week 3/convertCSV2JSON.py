@@ -13,8 +13,8 @@ jsonbestand = open("data.json", "w")
 namen = ("Provincies", "Gasten *1000")
 bestand = csv.DictReader(csvbestand, namen)
 
-jsonbestand.write('{"data":' "\n")
+jsonbestand.write('{"data":' "\n" '[')
 for regel in bestand:
     json.dump(regel, jsonbestand, indent = 4)
-    jsonbestand.write("\n")
-jsonbestand.write('}')
+    jsonbestand.write(",\n")
+jsonbestand.write(']}')
