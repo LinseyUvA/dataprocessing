@@ -15,7 +15,7 @@ for lijn in csvbestand:
     data[lijn.split(";")[0]] = (lijn.split(";")[1])
 
 namen = ("Provincies", "Gasten *1000")
-bestand = csv.DictReader(data, namen)
+bestand = csv.DictReader(csvbestand, namen)
 
 for regel in bestand:
     json.dump(regel, jsonbestand, indent = 4)
