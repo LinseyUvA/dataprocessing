@@ -1,44 +1,12 @@
-{
-    "Groningen": "Friesland",
-    "30": "32"
-}
-{
-    "Groningen": "Drenthe",
-    "30": "32"
-}
-{
-    "Groningen": "Overijssel",
-    "30": "60"
-}
-{
-    "Groningen": "Flevoland",
-    "30": "9"
-}
-{
-    "Groningen": "Gelderland",
-    "30": "117"
-}
-{
-    "Groningen": "Utrecht",
-    "30": "61"
-}
-{
-    "Groningen": "Noord-Holland",
-    "30": "276"
-}
-{
-    "Groningen": "Zuid-Holland",
-    "30": "207"
-}
-{
-    "Groningen": "Zeeland",
-    "30": "28"
-}
-{
-    "Groningen": "Noord-Brabant",
-    "30": "100"
-}
-{
-    "Groningen": "Limburg",
-    "30": "87"
-}
+{"Provincies": "Groningen", "Gasten *1000": "30"}
+{"Provincies": "Friesland", "Gasten *1000": "32"}
+{"Provincies": "Drenthe", "Gasten *1000": "32"}
+{"Provincies": "Overijssel", "Gasten *1000": "60"}
+{"Provincies": "Flevoland", "Gasten *1000": "9"}
+{"Provincies": "Gelderland", "Gasten *1000": "117"}
+{"Provincies": "Utrecht", "Gasten *1000": "61"}
+{"Provincies": "Noord-Holland", "Gasten *1000": "276"}
+{"Provincies": "Zuid-Holland", "Gasten *1000": "207"}
+{"Provincies": "Zeeland", "Gasten *1000": "28"}
+{"Provincies": "Noord-Brabant", "Gasten *1000": "100"}
+{"Provincies": "Limburg", "Gasten *1000": "87"}
