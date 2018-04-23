@@ -19,5 +19,5 @@ for regel in bestand:
     jsonbestand.write(",\n")
     for c, waarde in enumerate(bestand):
         if c == 10:
-            jsonbestand.write("\b")
+            jsonbestand.write("hoi")
 jsonbestand.write(']}')
