@@ -13,7 +13,7 @@ jsonbestand = open("data.json", "w")
 Namen = ("Provincie", "Gasten *1000")
 reader = csv.DictReader(csvbestand, Namen)
 
-data = []
+data = {}
 for row in reader:
     data[row.split(";")[0].strip()] = (row.split(","))
     json.dump(data, jsonbestand)
