@@ -1,5 +1,11 @@
-p {
-  font-size: 12px;
-  line-height: 14px;
-  color: black;
+.staaf rect{
+  fill: Indigo;
+  stroke: Black;
+  stroke-width: 0.5;
+}
+
+.axis
+{
+    fill: none;
+    stroke: black;
 }

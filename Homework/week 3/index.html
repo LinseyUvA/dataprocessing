@@ -1,14 +1,100 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title> Barchart </title>
         <link rel="stylesheet" type="text/css" href="style.css">
-        <script type="text/javascript" src="barcart.js"></script>
-        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+
     </head>
     <body>
+
+        <div class="staaf"></div>
+        <div style="height: 5px;"></div>
+
+        <script type="text/javascript">
+        var hoogte = 500
+        var breedte = 700
+        var staafBreedte = 40
+        var staafVulling = 1
+
+        var provincies = ["groningen", "friesland", "drenthe", "overijssel", "flevoland", "gelderland", "utrecht", "n-holland", "z-holland", "zeeland", "n-brabant", "limburg"]
+
+        var marge = {top: 70, beneden: 50, rechts: 20, links: 50}
+        var grafiekHoogte = hoogte - marge.top - marge.beneden
+        var grafiekBreedte = breedte - marge.rechts - marge.links
+
+        var svg = d3.select("body")
+            .append("svg")
+            .attr("height", hoogte)
+            .attr("width", breedte)
+
+
+        d3.json("data.json", function(error, data){
+          if (error){
+            return alert(error);
+          }
+
+          // van de data een reeks maken
+          dataReeks = []
+          for (var i = 0; i < data.data.length; i++)
+          {
+            dataReeks[i] = +data.data[i]["Gasten *1000"]
+          }
+
+          var x = d3.scale.ordinal()
+              .domain(provincies)
+              .rangeBands([0, (grafiekBreedte - staafVulling)])
+
+          var maxWaarde = Math.max(...dataReeks)
+          var y = d3.scale.linear()
+              .domain([maxWaarde, 0])
+              .range([0, grafiekHoogte])
+
+          var staaf = svg.selectAll("rect")
+              .data(dataReeks)
+              .enter()
+              .append("rect")
+              .attr("x", function(d, i) {
+                  return i * ((breedte - marge.links) / dataReeks.length - staafVulling) + marge.links; })
+              .attr("y", function(d) {
+                  return y(d); })
+              .attr("width", staafBreedte)
+              .attr("height", function(d) {
+                  return grafiekHoogte - y(d); })
+              .attr("fill", "Indigo");
+
+          var asX = d3.svg.axis()
+              .scale(x)
+              .orient("bottom");
+
+
+          svg.append("g")
+              .attr("class", "axis")
+              .attr("transform", "translate(" + marge.links + "," + grafiekHoogte + ")")
+              .call(asX)
+              .attr("font-size", "10px");
+
+          var asY = d3.svg.axis()
+              .scale(y)
+              .orient("left")
+
+
+          svg.append("g")
+              .attr("class", "axis")
+              .attr("transform", "translate(" + marge.links + "," + 0 + ")")
+              .call(asY)
+              .attr("font-size", "10px");
+
+
+
+
+        })
+        d3.select("head").append("title").text("Barchart")
+        d3.select("body").append("p").text("Het aantal gasten dat in een provincie verblijft verkregen via het cbs") .style("color", "grey")
+        d3.select("body").append("p").text("Linsey Schaap (11036109)")
+        </script>
+
         <a href="https://opendata.cbs.nl/statline/#/CBS/nl/dataset/82061ned/table?ts=1524390236586">Bron</a>
-        <p> Linsey Schaap (11036109) </p>
-        <p> Homework Week 3: Barchart </p>
+
     </body>
 </html>
