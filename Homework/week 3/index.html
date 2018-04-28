@@ -2,34 +2,32 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="style.css">
-
         <script src="https://d3js.org/d3.v3.min.js"></script>
-
     </head>
     <body>
-
-        <div class="staaf"></div>
-        <div style="height: 5px;"></div>
-
         <script type="text/javascript">
+        // stel de hoogte, breedte en afstand tussen de staven vast
         var hoogte = 500
         var breedte = 700
-        var staafBreedte = 40
-        var staafVulling = 1
+        var staafVulling = 20
 
+        // initialiseer alle provincies
         var provincies = ["groningen", "friesland", "drenthe", "overijssel", "flevoland", "gelderland", "utrecht", "n-holland", "z-holland", "zeeland", "n-brabant", "limburg"]
 
+        // marges vast leggen
         var marge = {boven: 70, beneden: 40, rechts: 10, links: 70}
         var grafiekHoogte = hoogte - marge.boven - marge.beneden
         var grafiekBreedte = breedte - marge.rechts - marge.links
 
+        // creëer een format voor een afbeelding
         var svg = d3.select("body")
             .append("svg")
             .attr("height", hoogte)
             .attr("width", breedte)
 
-
+        // lees de data
         d3.json("data.json", function(error, data){
+          // geef foutmelding bij ontbreken van data
           if (error){
             return alert(error);
           }
@@ -41,82 +39,99 @@
             dataReeks[i] = +data.data[i]["Gasten *1000"]
           }
 
+          // bepaal maximale waarden en de breedte van een staaf
+          var maxWaarde = Math.max(...dataReeks)
+          var staafBreedte = (breedte - (dataReeks.length - 1) * staafVulling) / dataReeks.length
 
+          // maak een schaalfunctie voor de x waarden
           var x = d3.scale.ordinal()
               .domain(provincies)
-              .rangeBands([0, (grafiekBreedte - staafVulling)])
+              .rangeBands([0, grafiekBreedte])
 
-          var maxWaarde = Math.max(...dataReeks)
+          // maak een schaalfunctie voor de y waarden
           var y = d3.scale.linear()
               .domain([maxWaarde, 0])
               .range([0, grafiekHoogte])
 
+          // creëer alle staven
           var staaf = svg.selectAll("rect")
               .data(dataReeks)
               .enter()
               .append("rect")
+
+              // zet de staaf op de juiste positie
               .attr("x", function(d, i) {
-                  return i * ((breedte - marge.links) / dataReeks.length - staafVulling) + marge.links + marge.rechts; })
+                  return i * ((breedte - marge.links) / dataReeks.length) + marge.links; })
               .attr("y", function(d) {
                   return y(d) + marge.boven; })
+
+              // geef de staaf de juiste hoogte en breedte mee
               .attr("width", staafBreedte)
               .attr("height", function(d) {
                   return grafiekHoogte - y(d); })
+
+              // geef de staaf een kleur en rand
               .attr("fill", "Indigo")
               .attr("stroke", "Black")
+
+              // maak de staven interactief
               .on("mouseover", function() {
-                  tooltip.style("display", null);
+                  infoKnop.style("display", null);
                   d3.select(this).style("fill", "MediumPurple");})
               .on("mouseout", function() {
-                  tooltip.style("display", "none");
+                  infoKnop.style("display", "none");
                   d3.select(this).style("fill", "Indigo");})
               .on("mousemove", function(d) {
                   var xPos = d3.mouse(this)[0] - marge.rechts;
                   var yPos = d3.mouse(this)[1] - marge.beneden;
-                  tooltip.attr("transform", "translate(" + xPos + "," + yPos + ")")
-                  tooltip.select("text").text(d);});
+                  infoKnop.attr("transform", "translate(" + xPos + "," + yPos + ")")
+                  infoKnop.select("text").text(d);});
 
-          var tooltip = svg.append("g")
+          // creëer een infoKnop
+          var infoKnop = svg.append("g")
               .attr("class", "tooltip")
               .style("display", "none");
 
-          tooltip.append("text")
+          // voeg de informatie toe aan de infoKnop
+          infoKnop.append("text")
             .attr("x", 15)
             .attr("dy", "1.2em")
             .style("text-anchor", "middle")
             .attr("font-size", "12px")
             .attr("font-weight", "bold");
 
-
+          // creëer een x-as
           var asX = d3.svg.axis()
               .scale(x)
               .orient("bottom");
 
+          // voeg de x-as en waarden toe
           svg.append("g")
               .attr("class", "axis")
               .attr("transform", "translate(" + marge.links + "," + (grafiekHoogte + marge.boven) + ")")
               .call(asX)
               .attr("font-size", "10px");
 
-          // geef naam voor x as
+          // geef de x-as een titel
           svg.append("text")
           .attr("x", breedte / 2 )
           .attr("y",  y(0) + marge.beneden + marge.boven)
           .style("text-anchor", "middle")
           .text("Provincies");
 
+          // creëer een y-as
           var asY = d3.svg.axis()
               .scale(y)
               .orient("left")
 
-
+          // voeg de y-as en waarden toe
           svg.append("g")
               .attr("class", "axis")
               .attr("transform", "translate(" + marge.links + "," +  marge.boven + ")")
               .call(asY)
               .attr("font-size", "10px");
 
-          // geef naam voor y as
+          // geef de y-as een titel
           svg.append("text")
           .attr("transform", "rotate(-90)")
           .attr("y", 0 + marge.rechts)
@@ -125,8 +140,7 @@
           .style("text-anchor", "middle")
           .text("Gasten x1000");
 
-
-          // voeg titel toevoegen
+          // voeg een titel aan de staafdigram toe
           svg.append("text")
           .attr("class", "title")
           .attr("x", breedte / 2 )
@@ -137,7 +151,7 @@
 
         })
         d3.select("head").append("title").text("Barchart")
-        d3.select("body").append("p").text("Het Nederlanders dat in eigen land te gast is in 2018 per provincie. De data is verkregen via het cbs.") .style("color", "grey")
+        d3.select("body").append("p").text("Het aantal Nederlanders dat in eigen land te gast is in 2018 per provincie. De data is verkregen via het cbs.") .style("color", "grey")
         d3.select("body").append("p").text("Linsey Schaap (11036109)")
         </script>
 
