@@ -1,3 +1,5 @@
+// INDEX.HTML WIL HET JSON BESTAND NIET INLEZEN, DUS ALLES STAAT IN INDEX.HTML
+
 d3.select("head").append("title").text("Barchart")
 d3.select("body").append("p").text("Het aantal Gasten dat in een provincie verblijft verkregen via het cbs") .style("color", "grey")
 d3.select("body").append("p").text("Linsey Schaap (11036109)")

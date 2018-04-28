@@ -19,8 +19,8 @@
 
         var provincies = ["groningen", "friesland", "drenthe", "overijssel", "flevoland", "gelderland", "utrecht", "n-holland", "z-holland", "zeeland", "n-brabant", "limburg"]
 
-        var marge = {top: 70, beneden: 50, rechts: 20, links: 50}
-        var grafiekHoogte = hoogte - marge.top - marge.beneden
+        var marge = {boven: 70, beneden: 40, rechts: 10, links: 70}
+        var grafiekHoogte = hoogte - marge.boven - marge.beneden
         var grafiekBreedte = breedte - marge.rechts - marge.links
 
         var svg = d3.select("body")
@@ -41,6 +41,7 @@
             dataReeks[i] = +data.data[i]["Gasten *1000"]
           }
 
+
           var x = d3.scale.ordinal()
               .domain(provincies)
               .rangeBands([0, (grafiekBreedte - staafVulling)])
@@ -55,24 +56,54 @@
               .enter()
               .append("rect")
               .attr("x", function(d, i) {
-                  return i * ((breedte - marge.links) / dataReeks.length - staafVulling) + marge.links; })
+                  return i * ((breedte - marge.links) / dataReeks.length - staafVulling) + marge.links + marge.rechts; })
               .attr("y", function(d) {
-                  return y(d); })
+                  return y(d) + marge.boven; })
               .attr("width", staafBreedte)
               .attr("height", function(d) {
                   return grafiekHoogte - y(d); })
-              .attr("fill", "Indigo");
+              .attr("fill", "Indigo")
+              .attr("stroke", "Black")
+              .on("mouseover", function() {
+                  tooltip.style("display", null);
+                  d3.select(this).style("fill", "MediumPurple");})
+              .on("mouseout", function() {
+                  tooltip.style("display", "none");
+                  d3.select(this).style("fill", "Indigo");})
+              .on("mousemove", function(d) {
+                  var xPos = d3.mouse(this)[0] - marge.rechts;
+                  var yPos = d3.mouse(this)[1] - marge.beneden;
+                  tooltip.attr("transform", "translate(" + xPos + "," + yPos + ")")
+                  tooltip.select("text").text(d);});
+
+          var tooltip = svg.append("g")
+              .attr("class", "tooltip")
+              .style("display", "none");
+
+          tooltip.append("text")
+            .attr("x", 15)
+            .attr("dy", "1.2em")
+            .style("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("font-weight", "bold");
+
 
           var asX = d3.svg.axis()
               .scale(x)
               .orient("bottom");
 
-
           svg.append("g")
               .attr("class", "axis")
-              .attr("transform", "translate(" + marge.links + "," + grafiekHoogte + ")")
+              .attr("transform", "translate(" + marge.links + "," + (grafiekHoogte + marge.boven) + ")")
               .call(asX)
               .attr("font-size", "10px");
+
+          // geef naam voor x as
+          svg.append("text")
+          .attr("x", breedte / 2 )
+          .attr("y",  y(0) + marge.beneden + marge.boven)
+          .style("text-anchor", "middle")
+          .text("Provincies");
 
           var asY = d3.svg.axis()
               .scale(y)
@@ -81,16 +112,32 @@
 
           svg.append("g")
               .attr("class", "axis")
-              .attr("transform", "translate(" + marge.links + "," + 0 + ")")
+              .attr("transform", "translate(" + marge.links + "," +  marge.boven + ")")
               .call(asY)
               .attr("font-size", "10px");
 
+          // geef naam voor y as
+          svg.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 0 + marge.rechts)
+          .attr("x",0 - (hoogte / 2))
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
+          .text("Gasten x1000");
 
 
+          // voeg titel toevoegen
+          svg.append("text")
+          .attr("class", "title")
+          .attr("x", breedte / 2 )
+          .attr("y", marge.boven / 2)
+          .attr("font-size", "30px")
+          .attr("text-anchor", "middle")
+          .text("Het aantal Nederlanders dat te gast is in eigen land");
 
         })
         d3.select("head").append("title").text("Barchart")
-        d3.select("body").append("p").text("Het aantal gasten dat in een provincie verblijft verkregen via het cbs") .style("color", "grey")
+        d3.select("body").append("p").text("Het Nederlanders dat in eigen land te gast is in 2018 per provincie. De data is verkregen via het cbs.") .style("color", "grey")
         d3.select("body").append("p").text("Linsey Schaap (11036109)")
         </script>
 
