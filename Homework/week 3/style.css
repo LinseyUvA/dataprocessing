@@ -1,11 +1,5 @@
 /* INDEX.HTML WIL HET CSS BESTAND NIET INLEZEN, DUS ALLES STAAT IN INDEX.HTML */
 
-.staaf rect{
-  fill: Indigo;
-  stroke: Black;
-  stroke-width: 0.5;
-}
-
 .axis
 {
     fill: none;
