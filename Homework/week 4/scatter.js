@@ -222,8 +222,10 @@ function doFunction(error, response) {
 
   }
 
-  document.getElementById("jaar2014").onclick = jaartalVeranderen;
+  // veel overlappende code, maar op een andere manier kreeg ik de dropdown niet voor elkaar
 
+  document.getElementById("jaar2014").onclick = jaartalVeranderen;
+  jaartal = 0
   var json = response[jaartal].responseText
   obj = JSON.parse(json);
 
