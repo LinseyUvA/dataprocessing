@@ -8,8 +8,8 @@ import csv
 import json
 
 
-csvbestand = open("overnachtingen.csv", "r")
-jsonbestand = open("overnachtingen.json", "w")
+csvbestand = open("sterren.csv", "r")
+jsonbestand = open("sterren.json", "w")
 
 namen = ("Land", "Aantal sterren", "Jaar" "Overnachtingen * 1000")
 bestand = csv.DictReader(csvbestand, namen)
