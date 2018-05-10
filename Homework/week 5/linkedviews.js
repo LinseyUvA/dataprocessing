@@ -4,7 +4,7 @@ window.onload = function() {
   .defer(d3.json, "overnachtingen.json")
   .defer(d3.json, "sterren.json")
   .defer(d3.xml, "Map_of_Europe.svg")
-  .awaitAll(kaart);
+  .awaitAll(barchart);
 };
 
 function kaart(error, response) {
@@ -21,8 +21,8 @@ function kaart(error, response) {
 
   // voeg de informatie toe aan de infoKnop
   infoKnop.append("text")
-    .attr("x", 15)
-    .attr("dy", "1.2em")
+    .attr("x", 300)
+    .attr("y", 300)
     .style("text-anchor", "middle")
     .attr("font-size", "12px")
     .attr("font-weight", "bold");
@@ -30,20 +30,19 @@ function kaart(error, response) {
 
   document.body.appendChild(response[2].documentElement);
 
-  var svg = d3.selectAll("#Portugal, #Spanje, #Belgie, #Italie, #Polen, #Griekenland, #Duitsland, #Ierland, #Frankrijk, #Oostenrijk, #Verenigd Koninkrijk, #Nederland, #Denemarken, #Rusland")
+  var svg = d3.selectAll("#Nederland, #Duitsland, #Belgie, #VerenigdKoninkrijk, #Ierland, #Frankrijk, #Italie, #Spanje, #Portugal, #Oostenrijk, #Griekenland, #Denemarken, #Polen, #Rusland")
     .style("fill", "Navy")
     .data(overnachtingen)
     // maak de staven interactief
     .on("mouseover", function() {
+        infoKnop.style("display", null);
         d3.select(this).style("fill", "SlateGray");})
     .on("mouseout", function() {
+        infoKnop.style("display", "none");
         d3.select(this).style("fill", "Navy");})
     .on("mousemove", function(d) {
       console.log(d)
-        var xPos = d3.mouse(this)[0];
-        var yPos = d3.mouse(this)[1];
-        infoKnop.attr("transform", "translate(" + xPos + "," + yPos + ")")
-        infoKnop.select("text").text(d.Jaar);
+        infoKnop.select("text").text(d.Overnachtingen);
       });
 
 
@@ -57,7 +56,7 @@ function barchart(error, response) {
 
   // stel hoogte en breedte vast
   var hoogte = 500
-  var breedte = 800
+  var breedte = 700
 
   // marges vast leggen
   var marge = {boven: 70, beneden: 50, rechts: 10, links: 70}
@@ -69,6 +68,61 @@ function barchart(error, response) {
       .append("svg")
       .attr("height", hoogte)
       .attr("width", breedte)
+
+  // bepaal maximale waarden en de breedte van een staaf
+  var maxWaarde = Math.max(...sterren)
+  var staafBreedte = (breedte - (dataReeks.length - 1) * staafVulling) / dataReeks.length
+
+
+  // maak een schaalfunctie voor de x waarden
+  var x = d3.scale.ordinal()
+      .domain(sterren)
+      .rangeBands([0, grafiekBreedte])
+
+  // maak een schaalfunctie voor de y waarden
+  var y = d3.scale.linear()
+      .domain([maxWaarde, 0])
+      .range([0, grafiekHoogte])
+
+  // creëer een x-as
+  var asX = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
+
+  // voeg de x-as en waarden toe
+  svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(" + marge.links + "," + (grafiekHoogte + marge.boven) + ")")
+      .call(asX)
+      .attr("font-size", "10px");
+
+  // geef de x-as een titel
+  svg.append("text")
+  .attr("x", breedte / 2 )
+  .attr("y",  y(0) + marge.beneden + marge.boven)
+  .style("text-anchor", "middle")
+  .text("Provincies");
+
+  // creëer een y-as
+  var asY = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+
+  // voeg de y-as en waarden toe
+  svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(" + marge.links + "," +  marge.boven + ")")
+      .call(asY)
+      .attr("font-size", "10px");
+
+  // geef de y-as een titel
+  svg.append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("y", 0 + marge.rechts)
+  .attr("x",0 - (hoogte / 2))
+  .attr("dy", "1em")
+  .style("text-anchor", "middle")
+  .text("Gasten x1000");
 
 
 }

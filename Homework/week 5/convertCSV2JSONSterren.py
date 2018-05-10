@@ -11,7 +11,7 @@ import json
 csvbestand = open("sterren.csv", "r")
 jsonbestand = open("sterren.json", "w")
 
-namen = ("Land", "Aantal sterren", "Jaar", "Overnachtingen * 1000")
+namen = ("Land", "Sterren", "Jaar", "Overnachtingen")
 bestand = csv.DictReader(csvbestand, namen)
 
 # Parse the CSV into JSON
