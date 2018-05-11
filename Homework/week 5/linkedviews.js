@@ -98,6 +98,7 @@ window.onload = function() {
             var yPos = d3.mouse(this)[1] - marge.beneden;
             infoKnop2.attr("transform", "translate(" + xPos + "," + yPos + ")")
             infoKnop2.select("text").text(d.aantalOvernachtingen);});
+        
 
     // creëer een infoKnop
     var infoKnop2 = svg.append("g")
