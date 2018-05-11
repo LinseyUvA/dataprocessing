@@ -39,6 +39,7 @@ window.onload = function() {
     var marge = {boven: 70, beneden: 50, rechts: 20, links: 100}
     var grafiekHoogte = hoogte - marge.boven - marge.beneden
     var grafiekBreedte = breedte - marge.rechts - marge.links
+    var grens = 10
 
     // creëer een format voor een afbeelding
     var svg = d3.select("body")
@@ -50,11 +51,6 @@ window.onload = function() {
     var maxWaarde = Math.max.apply(Math, sterren.map(function(d) {
       return d.aantalOvernachtingen
     }))
-    var grens = 10
-
-    // tekst voor bij de legenda
-    var soortSterren = ["geen enkele ster", "1 ster", "2 sterren", "3 sterren", "4 sterren", "5 sterren"]
-
 
     // maak een schaalfunctie voor de x waarden
     var x = d3.scaleBand()
@@ -67,9 +63,7 @@ window.onload = function() {
     x.domain(sterren.map(function(d) {
       return d.soortHotel
     }))
-    y.domain([0, Math.max.apply(Math, sterren.map(function(d) {
-      return d.aantalOvernachtingen
-    }))])
+    y.domain([0, maxWaarde])
 
     // creëer alle staven
     var staaf = svg.selectAll("rect")
