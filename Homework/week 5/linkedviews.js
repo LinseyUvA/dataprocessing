@@ -165,9 +165,16 @@ window.onload = function() {
       .attr("class", "title")
       .attr("x", breedte / 2 )
       .attr("y", marge.boven / 2 - 20)
-      .attr("font-size", "22px")
+      .attr("font-size", "18px")
       .attr("text-anchor", "middle")
       .text("Het aantal overnachtingen dat plaats vindt in verschillende soorten hotels");
+
+   svg.append("text")
+      .attr("x", breedte / 2)
+      .attr("y", marge.boven / 2 + 10)
+      .attr("font-size", "22px")
+      .attr("text-anchor", "middle")
+      .text("Nederland")
 
 
     function updateBarchart(error, land) {
@@ -287,9 +294,16 @@ window.onload = function() {
         .attr("class", "title")
         .attr("x", breedte / 2 )
         .attr("y", marge.boven / 2 - 20)
-        .attr("font-size", "22px")
+        .attr("font-size", "18px")
         .attr("text-anchor", "middle")
         .text("Het aantal overnachtingen dat plaats vindt in verschillende soorten hotels");
+
+      svg.append("text")
+         .attr("x", breedte / 2)
+         .attr("y", marge.boven / 2 + 10)
+         .attr("font-size", "22px")
+         .attr("text-anchor", "middle")
+         .text(land)
     }
   }
 };
