@@ -36,7 +36,7 @@ window.onload = function() {
     var breedte = 700
 
     // marges vast leggen
-    var marge = {boven: 70, beneden: 50, rechts: 250, links: 70}
+    var marge = {boven: 70, beneden: 50, rechts: 20, links: 100}
     var grafiekHoogte = hoogte - marge.boven - marge.beneden
     var grafiekBreedte = breedte - marge.rechts - marge.links
 
@@ -47,27 +47,76 @@ window.onload = function() {
         .attr("width", breedte)
 
     // bepaal maximale waarden en de breedte van een staaf
-    var maxWaarde = Math.max(...sterren)
-    var staafBreedte = (breedte - (sterren.length - 1)) / sterren.length
-    var jaren = ["2012", "2013", "2014", "2015"]
+    var maxWaarde = Math.max.apply(Math, sterren.map(function(d) {
+      return d.aantalOvernachtingen
+    }))
+    var grens = 10
+
     // tekst voor bij de legenda
     var soortSterren = ["geen enkele ster", "1 ster", "2 sterren", "3 sterren", "4 sterren", "5 sterren"]
 
 
     // maak een schaalfunctie voor de x waarden
     var x = d3.scaleBand()
-              .rangeRound([0, grafiekBreedte + marge.links/2])
+              .range([0, grafiekBreedte], .1)
 
     // maak een schaalfunctie voor de y waarden
-    var y = d3.scaleLinear()
-              .rangeRound([grafiekHoogte, 0])
+    var y = d3.scaleLinear([maxWaarde, 0])
+              .range([grafiekHoogte, 0])
 
     x.domain(sterren.map(function(d) {
-      return d.jaar
+      return d.soortHotel
     }))
-    y.domain([0, d3.max(sterren, function(d) {
-      return d.
-    })])
+    y.domain([0, Math.max.apply(Math, sterren.map(function(d) {
+      return d.aantalOvernachtingen
+    }))])
+
+    // creëer alle staven
+    var staaf = svg.selectAll("rect")
+        .data(sterren)
+        .enter()
+        .append("rect")
+
+        // zet de staaf op de juiste positie
+        .attr("x", function(d, i) {
+            return x(d.soortHotel) + marge.links + grens; })
+        .attr("y", function(d) {
+            return y(d.aantalOvernachtingen) + marge.boven; })
+
+        // geef de staaf de juiste hoogte en breedte mee
+        .attr("width", x.bandwidth() - grens)
+        .attr("height", function(d) {
+            return grafiekHoogte - y(d.aantalOvernachtingen); })
+
+        // geef de staaf een kleur en rand
+        .attr("fill", "Navy")
+        .attr("stroke", "Black")
+
+        // maak de staven interactief
+        .on("mouseover", function() {
+            infoKnop2.style("display", null);
+            d3.select(this).style("fill", "SlateGray");})
+        .on("mouseout", function() {
+            infoKnop2.style("display", "none");
+            d3.select(this).style("fill", "Navy");})
+        .on("mousemove", function(d) {
+            var xPos = d3.mouse(this)[0] - marge.rechts;
+            var yPos = d3.mouse(this)[1] - marge.beneden;
+            infoKnop2.attr("transform", "translate(" + xPos + "," + yPos + ")")
+            infoKnop2.select("text").text(d.aantalOvernachtingen);});
+
+    // creëer een infoKnop
+    var infoKnop2 = svg.append("g")
+                       .attr("class", "tooltip")
+                       .style("display", "none");
+
+    // voeg de informatie toe aan de infoKnop
+    infoKnop2.append("text")
+             .attr("x", 15)
+             .attr("dy", "1.2em")
+             .style("text-anchor", "middle")
+             .attr("font-size", "12px")
+             .attr("font-weight", "bold");
 
     // creëer een x-as
     var asX = d3.axisBottom(x);
@@ -84,7 +133,7 @@ window.onload = function() {
        .attr("x", (breedte - marge.rechts + marge.links)/ 2 )
        .attr("y",  y(0) + marge.beneden + marge.boven)
        .style("text-anchor", "middle")
-       .text("Jaar");
+       .text("Soort Hotel");
 
     // creëer een y-as
     var asY = d3.axisLeft(y)
@@ -99,8 +148,8 @@ window.onload = function() {
     // geef de y-as een titel
     svg.append("text")
        .attr("transform", "rotate(-90)")
-       .attr("y", 0 + 20)
-       .attr("x",0 - (hoogte / 2))
+       .attr("y", 0 + marge.beneden)
+       .attr("x", 0 - (hoogte / 2))
        .attr("dy", "1em")
        .style("text-anchor", "middle")
        .text("Aantal overnachtingen in Nederland x1000");
@@ -112,46 +161,8 @@ window.onload = function() {
       .attr("y", marge.boven / 2 - 20)
       .attr("font-size", "22px")
       .attr("text-anchor", "middle")
-      .text("Het aantal overnachtingen dat plaatst vindt in verschillende soorten hotels");
+      .text("Het aantal overnachtingen dat plaats vindt in verschillende soorten hotels");
 
-
-    // kleuren aanmaken voor de legenda
-    var kleur = d3.scaleOrdinal()
-                  .domain(["1450"])
-                  .range(["#eff3ff", "#c6dbef", "#9ecae1","#6baed6","#4292c6", "#2171b5", "#084594"]);
-
-    // maak legenda voor de kleuren
-    var legenda = svg.append("g")
-                     .attr("class", "legend")
-
-    // maak de vakjes voor de legenda
-    legenda.selectAll("rect")
-           .data(soortSterren)
-           .enter().append("rect")
-           .attr("height", 8)
-           .attr("width", 8)
-           .attr("x", grafiekBreedte + marge.links + 50)
-           .attr("y", function(d, i) {
-             return i * 16 + marge.boven})
-           .style("fill", kleur)
-
-    // voeg tekst toe aan de legenda
-    legenda.selectAll("text")
-           .data(soortSterren)
-           .enter()
-           .append("text")
-           .attr("x", grafiekBreedte + marge.links + 75)
-           .attr("y", function(d, i) {
-             return i * 16 + marge.boven})
-           .attr("dy", ".35em")
-           .text(function(d,i) {
-             return soortSterren[i]})
-
-    // voeg extra uitleg aan legenda toe
-    svg.append("text")
-       .attr("x", grafiekBreedte + marge.links + 50)
-       .attr("y", marge.boven - 10)
-       .text("Aantal sterren van ieder hotel");
   }
 };
 
