@@ -67,9 +67,7 @@ window.onload = function() {
     x.domain(sterren.map(function(d) {
       return d.soortHotel
     }))
-    y.domain([0, Math.max.apply(Math, sterren.map(function(d) {
-      return d.aantalOvernachtingen
-    }))])
+    y.domain([0, Math.max.apply(Math, sterren.map(function(d) {return d.aantalOvernachtingen }))])
 
     // creëer alle staven
     var staaf = svg.selectAll("rect")
