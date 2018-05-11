@@ -184,7 +184,6 @@ window.onload = function() {
       for (var i = 0; i < sterren.length; i++) {
         if (sterren[i].Land == land){
           ster.push(sterren[i])
-          console.log(ster)
         }
       }
       // bepaal maximale waarden en de breedte van een staaf
