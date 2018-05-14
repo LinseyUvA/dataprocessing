@@ -1,7 +1,15 @@
+/*
+Naam: Linsey Schaap
+Studentnummer: 11036109
+
+Dit script haalt de gegevens op van het aantal overnachtingen dat plaats vind in Nederland.
+Hierbij wordt onderscheid gemaakt tussen verschillende landen en het soort hotel waar deze gasten in verblijven.
+
+*/
 window.onload = function() {
   // creëer een infoKnop
   var infoKnop = d3.select("body").append("g")
-      .attr("class", "tooltip");
+      .attr("class", "tooltipje");
 
   d3.queue()
   .defer(d3.json, "overnachtingen.json")
@@ -18,7 +26,7 @@ window.onload = function() {
     document.body.appendChild(response[2].documentElement);
 
     var svg = d3.selectAll("#Nederland, #Duitsland, #Belgie, #VerenigdKoninkrijk, #Ierland, #Frankrijk, #Italie, #Spanje, #Portugal, #Oostenrijk, #Griekenland, #Denemarken, #Polen, #Rusland")
-      .style("fill", "Navy")
+      .style("fill", "Indigo")
       .data(overnachtingen)
       // maak de staven interactief
       .on("mouseover", function() {
@@ -26,7 +34,7 @@ window.onload = function() {
           d3.select(this).style("fill", "SlateGray");})
       .on("mouseout", function() {
           infoKnop.style("display", null);
-          d3.select(this).style("fill", "Navy");})
+          d3.select(this).style("fill", "Indigo");})
       .on("mousemove", function(d) {
           infoKnop.html("Vanuit " + d.Land + " overnachten " + d.Overnachtingen + " duizend mensen in Nederland (2012)<br/>")
         })
@@ -52,7 +60,7 @@ window.onload = function() {
 
     ster = []
     for (var i = 0; i < sterren.length; i++) {
-      if (sterren[i].Land == "Nederland"){
+      if (sterren[i].Land == "Europa"){
         ster.push(sterren[i])
       }
     }
@@ -94,7 +102,7 @@ window.onload = function() {
             return grafiekHoogte - y(d.aantalOvernachtingen); })
 
         // geef de staaf een kleur en rand
-        .attr("fill", "Navy")
+        .attr("fill", "Indigo")
         .attr("stroke", "Black")
 
         // maak de staven interactief
@@ -103,7 +111,7 @@ window.onload = function() {
             d3.select(this).style("fill", "SlateGray");})
         .on("mouseout", function() {
             infoKnop2.style("display", "none");
-            d3.select(this).style("fill", "Navy");})
+            d3.select(this).style("fill", "Indigo");})
         .on("mousemove", function(d) {
             var xPos = d3.mouse(this)[0] - marge.rechts;
             var yPos = d3.mouse(this)[1] - marge.beneden;
@@ -113,7 +121,7 @@ window.onload = function() {
 
     // creëer een infoKnop
     var infoKnop2 = svg.append("g")
-                       .attr("class", "tooltip")
+                       .attr("class", "tooltipje")
                        .style("display", "none");
 
     // voeg de informatie toe aan de infoKnop
@@ -223,7 +231,7 @@ window.onload = function() {
               return grafiekHoogte - y(d.aantalOvernachtingen); })
 
           // geef de staaf een kleur en rand
-          .attr("fill", "Navy")
+          .attr("fill", "Indigo")
           .attr("stroke", "Black")
 
           // maak de staven interactief
@@ -232,7 +240,7 @@ window.onload = function() {
               d3.select(this).style("fill", "SlateGray");})
           .on("mouseout", function() {
               infoKnop2.style("display", "none");
-              d3.select(this).style("fill", "Navy");})
+              d3.select(this).style("fill", "Indigo");})
           .on("mousemove", function(d) {
               var xPos = d3.mouse(this)[0] - marge.rechts;
               var yPos = d3.mouse(this)[1] - marge.beneden;
@@ -242,7 +250,7 @@ window.onload = function() {
 
       // creëer een infoKnop
       var infoKnop2 = svg.append("g")
-                         .attr("class", "tooltip")
+                         .attr("class", "tooltipje")
                          .style("display", "none");
 
       // voeg de informatie toe aan de infoKnop
