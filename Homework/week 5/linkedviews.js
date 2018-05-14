@@ -58,6 +58,7 @@ window.onload = function() {
         .attr("height", hoogte)
         .attr("width", breedte)
 
+    // sla de data voor alleen europa op
     ster = []
     for (var i = 0; i < sterren.length; i++) {
       if (sterren[i].Land == "Europa"){
@@ -79,8 +80,7 @@ window.onload = function() {
               .range([grafiekHoogte, 0])
 
     x.domain(ster.map(function(d) {
-      return d.soortHotel
-    }))
+      return d.soortHotel}))
     y.domain([0, maxWaarde])
 
 
@@ -137,7 +137,7 @@ window.onload = function() {
 
     // voeg de x-as en waarden toe
     svg.append("g")
-       .attr("class", "axis")
+       .attr("class", "xAs")
        .attr("transform", "translate(" + marge.links + "," + (grafiekHoogte + marge.boven) + ")")
        .call(asX)
        .attr("font-size", "10px");
@@ -154,7 +154,7 @@ window.onload = function() {
 
     // voeg de y-as en waarden toe
     svg.append("g")
-        .attr("class", "axis")
+        .attr("class", "yAs")
         .attr("transform", "translate(" + marge.links + "," +  marge.boven + ")")
         .call(asY)
         .attr("font-size", "10px");
@@ -168,27 +168,31 @@ window.onload = function() {
        .style("text-anchor", "middle")
        .text("Aantal overnachtingen in Nederland x1000");
 
-   // voeg een titel aan de scatterplot toe
-   svg.append("text")
-      .attr("class", "title")
-      .attr("x", breedte / 2 )
-      .attr("y", marge.boven / 2 - 20)
-      .attr("font-size", "18px")
-      .attr("text-anchor", "middle")
-      .text("Het aantal overnachtingen dat plaats vindt in verschillende soorten hotels");
+    // voeg een titel aan de staafdiagram toe
+    svg.append("text")
+       .attr("class", "title")
+       .attr("x", breedte / 2 )
+       .attr("y", marge.boven / 2 - 20)
+       .attr("font-size", "18px")
+       .attr("text-anchor", "middle")
+       .text("Het aantal overnachtingen dat plaats vindt in verschillende soorten hotels");
 
-   svg.append("text")
-      .attr("class", "title")
-      .attr("x", breedte / 2)
-      .attr("y", marge.boven / 2 + 10)
-      .attr("font-size", "22px")
-      .attr("text-anchor", "middle")
-      .text("Nederland")
+    // voeg een ondertitel aan de staafdiagram toe
+    svg.append("text")
+       .attr("class", "ondertitel")
+       .attr("x", breedte / 2)
+       .attr("y", marge.boven / 2 + 10)
+       .attr("font-size", "22px")
+       .attr("text-anchor", "middle")
+       .text("Europa")
 
 
     function updateBarchart(error, land) {
       d3.selectAll("rect").remove()
-      d3.selectAll("text").remove()
+      d3.selectAll(".ondertitel").remove()
+      d3.selectAll(".xAs").remove()
+
+      // sla de data voor het land waar op geklikt wordt op
       ster = []
       for (var i = 0; i < sterren.length; i++) {
         if (sterren[i].Land == land){
@@ -209,8 +213,7 @@ window.onload = function() {
                 .range([grafiekHoogte, 0])
 
       x.domain(ster.map(function(d) {
-        return d.soortHotel
-      }))
+        return d.soortHotel}))
       y.domain([0, maxWaarde])
 
       // creëer alle staven
@@ -266,48 +269,14 @@ window.onload = function() {
 
       // voeg de x-as en waarden toe
       svg.append("g")
-         .attr("class", "axis")
+         .attr("class", "xAs")
          .attr("transform", "translate(" + marge.links + "," + (grafiekHoogte + marge.boven) + ")")
          .call(asX)
          .attr("font-size", "10px");
 
-      // geef de x-as een titel
+      // voeg een ondertitel aan de staafdiagram toe
       svg.append("text")
-         .attr("x", (breedte - marge.rechts + marge.links)/ 2 )
-         .attr("y",  y(0) + marge.beneden + marge.boven)
-         .style("text-anchor", "middle")
-         .text("Soort Hotel");
-
-      // creëer een y-as
-      var asY = d3.axisLeft(y)
-
-      // voeg de y-as en waarden toe
-      svg.append("g")
-          .attr("class", "axis")
-          .attr("transform", "translate(" + marge.links + "," +  marge.boven + ")")
-          .call(asY)
-          .attr("font-size", "10px");
-
-      // geef de y-as een titel
-      svg.append("text")
-         .attr("transform", "rotate(-90)")
-         .attr("y", 0 + marge.rechts)
-         .attr("x", 0 - (hoogte / 2))
-         .attr("dy", "1em")
-         .style("text-anchor", "middle")
-         .text("Aantal overnachtingen in Nederland x1000");
-
-     // voeg een titel aan de scatterplot toe
-     svg.append("text")
-        .attr("class", "title")
-        .attr("x", breedte / 2 )
-        .attr("y", marge.boven / 2 - 20)
-        .attr("font-size", "18px")
-        .attr("text-anchor", "middle")
-        .text("Het aantal overnachtingen dat plaats vindt in verschillende soorten hotels");
-
-      svg.append("text")
-         .attr("class", "title")
+         .attr("class", "ondertitel")
          .attr("x", breedte / 2)
          .attr("y", marge.boven / 2 + 10)
          .attr("font-size", "22px")
