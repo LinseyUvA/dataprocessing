@@ -1,46 +1,46 @@
 /*
-Naam: Linsey Schaap
-Studentnummer: 11036109
+ * Naam: Linsey Schaap
+ * Studentnummer: 11036109
+ *
+ * Dit script haalt de gegevens op van het aantal overnachtingen dat plaats vind in Nederland.
+ * Hierbij wordt onderscheid gemaakt tussen verschillende landen en het soort hotel waar deze gasten in verblijven.
+ *
+**/
 
-Dit script haalt de gegevens op van het aantal overnachtingen dat plaats vind in Nederland.
-Hierbij wordt onderscheid gemaakt tussen verschillende landen en het soort hotel waar deze gasten in verblijven.
-
-*/
 window.onload = function() {
   // creëer een infoKnop
   var infoKnop = d3.select("body").append("g")
       .attr("class", "tooltipje");
 
   d3.queue()
-  .defer(d3.json, "overnachtingen.json")
-  .defer(d3.json, "sterren.json")
-  .defer(d3.xml, "Map_of_Europe.svg")
-  .awaitAll(grafieken);
+    .defer(d3.json, "overnachtingen.json")
+    .defer(d3.json, "sterren.json")
+    .defer(d3.xml, "Map_of_Europe.svg")
+    .awaitAll(grafieken);
 
   function grafieken(error, response) {
     if (error) throw error;
 
+    // data opslaan
     var overnachtingen = response["0"]["data"]
     var sterren = response["1"]["data"]
 
     document.body.appendChild(response[2].documentElement);
 
     var svg = d3.selectAll("#Nederland, #Duitsland, #Belgie, #VerenigdKoninkrijk, #Ierland, #Frankrijk, #Italie, #Spanje, #Portugal, #Oostenrijk, #Griekenland, #Denemarken, #Polen, #Rusland")
-      .style("fill", "Indigo")
-      .data(overnachtingen)
-      // maak de staven interactief
-      .on("mouseover", function() {
-          infoKnop.style("display", null);
-          d3.select(this).style("fill", "SlateGray");})
-      .on("mouseout", function() {
-          infoKnop.style("display", null);
-          d3.select(this).style("fill", "Indigo");})
-      .on("mousemove", function(d) {
-          infoKnop.html("Vanuit " + d.Land + " overnachten " + d.Overnachtingen + " duizend mensen in Nederland (2012)<br/>")
-        })
-      .on("click", function(d) {
-          updateBarchart(eval(d.x), d.Land)
-      })
+                .style("fill", "Indigo")
+                .data(overnachtingen)
+                // maak de staven interactief
+                .on("mouseover", function() {
+                    infoKnop.style("display", null);
+                    d3.select(this).style("fill", "SlateGray");})
+                .on("mouseout", function() {
+                    infoKnop.style("display", null);
+                    d3.select(this).style("fill", "Indigo");})
+                .on("mousemove", function(d) {
+                    infoKnop.html("Vanuit " + d.Land + " overnachten " + d.Overnachtingen + " duizend mensen in Nederland (2012)<br/>")})
+                .on("click", function(d) {
+                    updateBarchart(eval(d.x), d.Land)})
 
     // stel hoogte en breedte vast
     var hoogte = 600
@@ -54,9 +54,9 @@ window.onload = function() {
 
     // creëer een format voor een afbeelding
     var svg = d3.select("body")
-        .append("svg")
-        .attr("height", hoogte)
-        .attr("width", breedte)
+                .append("svg")
+                .attr("height", hoogte)
+                .attr("width", breedte)
 
     // sla de data voor alleen europa op
     ster = []
@@ -86,37 +86,37 @@ window.onload = function() {
 
     // creëer alle staven
     var staaf = svg.selectAll("rect")
-        .data(ster)
-        .enter()
-        .append("rect")
+                   .data(ster)
+                   .enter()
+                   .append("rect")
 
-        // zet de staaf op de juiste positie
-        .attr("x", function(d, i) {
-            return x(d.soortHotel) + marge.links + grens; })
-        .attr("y", function(d) {
-            return y(d.aantalOvernachtingen) + marge.boven; })
+                   // zet de staaf op de juiste positie
+                   .attr("x", function(d, i) {
+                        return x(d.soortHotel) + marge.links + grens; })
+                   .attr("y", function(d) {
+                       return y(d.aantalOvernachtingen) + marge.boven; })
 
-        // geef de staaf de juiste hoogte en breedte mee
-        .attr("width", x.bandwidth() - grens)
-        .attr("height", function(d) {
-            return grafiekHoogte - y(d.aantalOvernachtingen); })
+                   // geef de staaf de juiste hoogte en breedte mee
+                   .attr("width", x.bandwidth() - grens)
+                   .attr("height", function(d) {
+                       return grafiekHoogte - y(d.aantalOvernachtingen); })
 
-        // geef de staaf een kleur en rand
-        .attr("fill", "Indigo")
-        .attr("stroke", "Black")
+                   // geef de staaf een kleur en rand
+                   .attr("fill", "Indigo")
+                   .attr("stroke", "Black")
 
-        // maak de staven interactief
-        .on("mouseover", function() {
-            infoKnop2.style("display", null);
-            d3.select(this).style("fill", "SlateGray");})
-        .on("mouseout", function() {
-            infoKnop2.style("display", "none");
-            d3.select(this).style("fill", "Indigo");})
-        .on("mousemove", function(d) {
-            var xPos = d3.mouse(this)[0] - marge.rechts;
-            var yPos = d3.mouse(this)[1] - marge.beneden;
-            infoKnop2.attr("transform", "translate(" + xPos + "," + yPos + ")")
-            infoKnop2.select("text").text(d.aantalOvernachtingen);})
+                   // maak de staven interactief
+                   .on("mouseover", function() {
+                       infoKnop2.style("display", null);
+                       d3.select(this).style("fill", "SlateGray");})
+                   .on("mouseout", function() {
+                       infoKnop2.style("display", "none");
+                       d3.select(this).style("fill", "Indigo");})
+                   .on("mousemove", function(d) {
+                       var xPos = d3.mouse(this)[0] - marge.rechts;
+                       var yPos = d3.mouse(this)[1] - marge.beneden;
+                       infoKnop2.attr("transform", "translate(" + xPos + "," + yPos + ")")
+                       infoKnop2.select("text").text(d.aantalOvernachtingen);})
 
 
     // creëer een infoKnop
@@ -190,7 +190,7 @@ window.onload = function() {
     function updateBarchart(error, land) {
       d3.selectAll("rect").remove()
       d3.selectAll(".ondertitel").remove()
-      d3.selectAll(".xAs").remove()
+      d3.selectAll(".yAs").remove()
 
       // sla de data voor het land waar op geklikt wordt op
       ster = []
@@ -218,37 +218,37 @@ window.onload = function() {
 
       // creëer alle staven
       var staaf = svg.selectAll("rect")
-          .data(ster)
-          .enter()
-          .append("rect")
+                     .data(ster)
+                     .enter()
+                     .append("rect")
 
-          // zet de staaf op de juiste positie
-          .attr("x", function(d, i) {
-              return x(d.soortHotel) + marge.links + grens; })
-          .attr("y", function(d) {
-              return y(d.aantalOvernachtingen) + marge.boven; })
+                     // zet de staaf op de juiste positie
+                     .attr("x", function(d, i) {
+                         return x(d.soortHotel) + marge.links + grens; })
+                     .attr("y", function(d) {
+                         return y(d.aantalOvernachtingen) + marge.boven; })
 
-          // geef de staaf de juiste hoogte en breedte mee
-          .attr("width", x.bandwidth() - grens)
-          .attr("height", function(d) {
-              return grafiekHoogte - y(d.aantalOvernachtingen); })
+                    // geef de staaf de juiste hoogte en breedte mee
+                    .attr("width", x.bandwidth() - grens)
+                    .attr("height", function(d) {
+                        return grafiekHoogte - y(d.aantalOvernachtingen); })
 
-          // geef de staaf een kleur en rand
-          .attr("fill", "Indigo")
-          .attr("stroke", "Black")
+                    // geef de staaf een kleur en rand
+                    .attr("fill", "Indigo")
+                    .attr("stroke", "Black")
 
-          // maak de staven interactief
-          .on("mouseover", function() {
-              infoKnop2.style("display", null);
-              d3.select(this).style("fill", "SlateGray");})
-          .on("mouseout", function() {
-              infoKnop2.style("display", "none");
-              d3.select(this).style("fill", "Indigo");})
-          .on("mousemove", function(d) {
-              var xPos = d3.mouse(this)[0] - marge.rechts;
-              var yPos = d3.mouse(this)[1] - marge.beneden;
-              infoKnop2.attr("transform", "translate(" + xPos + "," + yPos + ")")
-              infoKnop2.select("text").text(d.aantalOvernachtingen);})
+                    // maak de staven interactief
+                    .on("mouseover", function() {
+                        infoKnop2.style("display", null);
+                        d3.select(this).style("fill", "SlateGray");})
+                    .on("mouseout", function() {
+                        infoKnop2.style("display", "none");
+                        d3.select(this).style("fill", "Indigo");})
+                    .on("mousemove", function(d) {
+                        var xPos = d3.mouse(this)[0] - marge.rechts;
+                        var yPos = d3.mouse(this)[1] - marge.beneden;
+                        infoKnop2.attr("transform", "translate(" + xPos + "," + yPos + ")")
+                        infoKnop2.select("text").text(d.aantalOvernachtingen);})
 
 
       // creëer een infoKnop
@@ -264,14 +264,14 @@ window.onload = function() {
                .attr("font-size", "12px")
                .attr("font-weight", "bold");
 
-      // creëer een x-as
-      var asX = d3.axisBottom(x);
+     // creëer een y-as
+     var asY = d3.axisLeft(y)
 
-      // voeg de x-as en waarden toe
-      svg.append("g")
-         .attr("class", "xAs")
-         .attr("transform", "translate(" + marge.links + "," + (grafiekHoogte + marge.boven) + ")")
-         .call(asX)
+     // voeg de y-as en waarden toe
+     svg.append("g")
+         .attr("class", "yAs")
+         .attr("transform", "translate(" + marge.links + "," +  marge.boven + ")")
+         .call(asY)
          .attr("font-size", "10px");
 
       // voeg een ondertitel aan de staafdiagram toe

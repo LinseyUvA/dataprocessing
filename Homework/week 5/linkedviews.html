@@ -2,7 +2,7 @@
 Naam: Linsey Schaap
 Studentnummer: 11036109
 
-Dit html bestand ...
+Dit html bestand die hoort bij linkedviews
 -->
 
 <!DOCTYPE html>
@@ -13,27 +13,34 @@ Dit html bestand ...
         <link rel="stylesheet" href="linkedviews.css" type="text/css">
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script src="https://d3js.org/colorbrewer.v1.min.js"></script>
-        <script src="linkedviews.js" type="text/javascript"></script>
+        <script src="linkedviews.js"></script>
 
+        <!--  Inladen van bootstrap -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-
     </head>
-    <body>
 
+    <body>
       <div class="container-fluid">
+        <h1 align = "center">Overnachtingen in een hotel in Nederland</h1>
+        <br>
+        <br>
         <p> Linsey Schaap (11036109) </p>
         <p class = "bron"><a href="https://opendata.cbs.nl/statline/#/CBS/nl/dataset/82060NED/table?ts=1525679082556">Bron</a></p>
-        <div class="row">
-          <div class="col-sm-5" style="background-color:lavenderblush;">Ieder jaar komen er miljoenen mensen naar Nederland om familie te bezoek, op vakantie te gaan of voor zaken. Op de onderstaande kaart kan worden gezien hoeveel mensen uit verschillende landen overnachten in Nederland.</div>
-          <div class="col-sm-5" style="background-color:lavender;">Wanneer er voor een specifiek land wordt gekozen kan er meer informatie worden verkregen over het soort hotel waarin wordt verbleven.</div>
-        </div>
-        <button type="button" class="btn">Europa</button>
 
+        <div class="row">
+          <div class="col-sm-4" style="background-color:lavender;">Ieder jaar komen er miljoenen mensen naar Nederland om familie te bezoeken, op vakantie te gaan of voor zaken. Op de onderstaande kaart is te zien hoeveel mensen uit verschillende landen overnachten in Nederland.</div>
+          <div class="col-sm-4" style="background-color:lavenderblush;">Wanneer er naar een specifiek land wordt gekeken kan er meer informatie worden verkregen over het soort hotel waarin wordt verbleven.</div>
+          <div class="col-sm-4" style="background-color:lavender;">Om te zien hoe de soort hotels gemiddeld in heel Europa zijn verdeeld kan gebruik worden gemaakt van de knop "Europa".</div>
+        </div>
+        <br>
+        <button type="button" class="btn">Europa</button>
+        <br>
       </div>
   </body>
+
 </html>
