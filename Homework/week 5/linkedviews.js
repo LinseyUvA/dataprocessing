@@ -6,6 +6,7 @@
  * Hierbij wordt onderscheid gemaakt tussen verschillende landen en het soort hotel waar deze gasten in verblijven.
  *
 **/
+
 // stel hoogte en breedte vast
 var hoogte = 600
 var breedte = 700
@@ -32,11 +33,6 @@ window.onload = function() {
     .defer(d3.xml, "Map_of_Europe.svg")
     .awaitAll(grafieken);
 
-
-  var sterren = []
-  var overnachtingen = []
-  var land = "Europa"
-
   function grafieken(error, response) {
     if (error) throw error;
 
@@ -60,11 +56,11 @@ function kaart(response) {
   europa(sterren)
   document.getElementById("knop").onclick = function() {europa(sterren)};
 
-
   // maak een schaalfunctie voor de x waarden
   var x = d3.scaleBand()
             .range([0, grafiekBreedte], .1)
 
+  // kleur de landen met data en maak ze interactief
   var svg = d3.selectAll("#Nederland, #Duitsland, #Belgie, #VerenigdKoninkrijk, #Ierland, #Frankrijk, #Italie, #Spanje, #Portugal, #Oostenrijk, #Griekenland, #Denemarken, #Polen, #Rusland")
               .style("fill", "Indigo")
               .data(overnachtingen)
@@ -79,14 +75,14 @@ function kaart(response) {
                   infoKnop.html("Vanuit " + d.Land + " overnachten " + d.Overnachtingen + " duizend mensen in Nederland (2012)<br/>")})
               .on("click", function(d) {
                   updateStaafdiagram(d.Land, sterren)})
-
 }
+
 
 function staafdiagram(response) {
   // data opslaan
   var sterren = response["1"]["data"]
 
-  // creëer een format voor een afbeelding
+  // creëer een format voor een staafdiagram
   var svg = d3.select("body")
               .append("svg")
               .attr("class", "bar")
@@ -103,8 +99,7 @@ function staafdiagram(response) {
 
   // bepaal maximale waarden en de breedte van een staaf
   var maxWaarde = Math.max.apply(Math, ster.map(function(d) {
-    return d.aantalOvernachtingen
-  }))
+    return d.aantalOvernachtingen}))
 
   // maak een schaalfunctie voor de x waarden
   var x = d3.scaleBand()
@@ -117,7 +112,6 @@ function staafdiagram(response) {
   x.domain(ster.map(function(d) {
     return d.soortHotel}))
   y.domain([0, maxWaarde])
-
 
   // creëer alle staven
   var staaf = svg.selectAll("rect")
@@ -152,7 +146,6 @@ function staafdiagram(response) {
                      var yPos = d3.mouse(this)[1] - marge.beneden;
                      infoKnop2.attr("transform", "translate(" + xPos + "," + yPos + ")")
                      infoKnop2.select("text").text(d.aantalOvernachtingen);})
-
 
   // creëer een infoKnop
   var infoKnop2 = svg.append("g")
@@ -215,10 +208,12 @@ function staafdiagram(response) {
 
 
 function updateStaafdiagram(land, sterren) {
+  // verwijder data die veranderd per land
   d3.selectAll("rect").remove()
   d3.selectAll(".ondertitel").remove()
   d3.selectAll(".yAs").remove()
 
+  // selecteer het figuur waar aanpassingen aan gedaan worden
   var svg = d3.select("body")
               .select(".bar")
               .attr("height", hoogte)
@@ -234,8 +229,7 @@ function updateStaafdiagram(land, sterren) {
 
   // bepaal maximale waarden en de breedte van een staaf
   var maxWaarde = Math.max.apply(Math, ster.map(function(d) {
-    return d.aantalOvernachtingen
-  }))
+    return d.aantalOvernachtingen}))
 
   // maak een schaalfunctie voor de x waarden
   var x = d3.scaleBand()
@@ -283,7 +277,6 @@ function updateStaafdiagram(land, sterren) {
                     infoKnop2.attr("transform", "translate(" + xPos + "," + yPos + ")")
                     infoKnop2.select("text").text(d.aantalOvernachtingen);})
 
-
   // creëer een infoKnop
   var infoKnop2 = svg.append("g")
                      .attr("class", "tooltipje")
@@ -313,9 +306,5 @@ function updateStaafdiagram(land, sterren) {
 
 
 function europa(sterren) {
-  console.log("hoi")
-  console.log(sterren)
-  // if (document.getElementsByClassName("btn")){
   updateStaafdiagram("Europa", sterren)
-  // }
 }
